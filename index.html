@@ -1,0 +1,302 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="PartProof spare parts and warranty tracking system">
+  <title>PartProof | Spare Parts Tracker</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script defer src="index.js"></script>
+</head>
+<body>
+  <aside class="sidebar">
+    <a href="#" class="brand">
+      <span class="brand-icon">P</span>
+      <span>PartProof<small>REPAIR INTELLIGENCE</small></span>
+    </a>
+
+    <p class="nav-label">WORKSPACE</p>
+    <nav>
+      <a href="#dashboard" class="nav-link active">▦ <span>Dashboard</span></a>
+      <a href="#inventory" class="nav-link">▤ <span>Parts inventory</span></a>
+      <a href="#claims" class="nav-link">♧ <span>Warranty claims</span></a>
+      <a href="#register" class="nav-link">＋ <span>Register a part</span></a>
+    </nav>
+
+    <div class="sidebar-bottom">
+      <span class="online-dot"></span>
+      Local demo mode
+      <p>Your records are saved in this browser.</p>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">REPAIR SHOP WORKSPACE</p>
+        <h1>Good work starts with good records.</h1>
+        <p class="subtitle">Track spare parts, warranties and supplier claims.</p>
+      </div>
+      <div class="topbar-actions">
+        <button id="themeToggle" class="theme-toggle" type="button"
+          aria-label="Switch to dark mode" aria-pressed="false">
+          <span aria-hidden="true">☾</span> <span class="theme-label">Dark mode</span>
+        </button>
+        <a class="primary-btn" href="#register">＋ Register part</a>
+      </div>
+    </header>
+
+    <section id="dashboard" class="stats-grid">
+      <article class="stat-card" data-shortcut="all" tabindex="0" role="button"
+        aria-label="Show all registered parts">
+        <div class="stat-icon green">▤</div>
+        <p>Registered parts</p>
+        <h2 id="totalParts">0</h2>
+        <span>All recorded spare parts</span>
+      </article>
+
+      <article class="stat-card" data-shortcut="active" tabindex="0" role="button"
+        aria-label="Show parts with active warranties">
+        <div class="stat-icon blue">◷</div>
+        <p>Active warranties</p>
+        <h2 id="activeWarranties">0</h2>
+        <span>Parts within warranty period</span>
+      </article>
+
+      <article class="stat-card" data-shortcut="open-claims" tabindex="0" role="button"
+        aria-label="Go to open warranty claims">
+        <div class="stat-icon orange">⚑</div>
+        <p>Open claims</p>
+        <h2 id="openClaims">0</h2>
+        <span>Claims needing attention</span>
+      </article>
+
+      <article class="stat-card" data-shortcut="resolved-claims" tabindex="0" role="button"
+        aria-label="Go to resolved warranty claims">
+        <div class="stat-icon purple">✓</div>
+        <p>Resolved claims</p>
+        <h2 id="resolvedClaims">0</h2>
+        <span>Claims marked resolved</span>
+      </article>
+    </section>
+
+    <section id="register" class="panel">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">INVENTORY MANAGEMENT</p>
+          <h2>Register a spare part</h2>
+          <p class="subtitle">Create a record that you can use to track its warranty.</p>
+        </div>
+      </div>
+
+      <form id="partForm">
+        <div class="form-grid">
+          <label>
+            Part name *
+            <input id="partName" required maxlength="100"
+              placeholder="e.g. iPhone 11 screen">
+          </label>
+
+          <label>
+            Category *
+            <select id="partCategory" required>
+              <option value="">Select category</option>
+              <option>Screen</option>
+              <option>Battery</option>
+              <option>Charging port</option>
+              <option>Camera</option>
+              <option>Keyboard</option>
+              <option>Other</option>
+            </select>
+          </label>
+
+          <label>
+            Supplier name *
+            <input id="supplierName" required maxlength="100"
+              placeholder="e.g. ABC Electronics">
+          </label>
+
+          <label>
+            Batch or serial reference
+            <input id="batchNumber" maxlength="100"
+              placeholder="e.g. BAT-2026-015">
+          </label>
+
+          <label>
+            Purchase date *
+            <input id="purchaseDate" type="date" required>
+          </label>
+
+          <label>
+            Warranty period *
+            <select id="warrantyMonths" required>
+              <option value="0">No warranty</option>
+              <option value="1">1 month</option>
+              <option value="3" selected>3 months</option>
+              <option value="6">6 months</option>
+              <option value="12">12 months</option>
+              <option value="24">24 months</option>
+            </select>
+          </label>
+
+          <label>
+            Repair job reference
+            <input id="repairJob" maxlength="100"
+              placeholder="e.g. JOB-001">
+          </label>
+
+          <label>
+            Purchase price (KSh)
+            <input id="partPrice" type="number" min="0" step="0.01"
+              placeholder="e.g. 2500">
+          </label>
+        </div>
+
+        <div class="form-actions">
+          <button class="primary-btn" type="submit">Save part record</button>
+          <button class="secondary-btn" type="reset">Clear form</button>
+        </div>
+        <p id="formMessage" class="message" role="status"></p>
+      </form>
+    </section>
+
+    <section id="inventory" class="panel">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">PARTS REGISTER</p>
+          <h2>Your spare parts</h2>
+        </div>
+      </div>
+
+      <div class="toolbar">
+        <input id="searchInput" type="search"
+          placeholder="Search parts, suppliers or references...">
+
+        <select id="statusFilter" aria-label="Filter parts">
+          <option value="all">All parts</option>
+          <option value="active">Warranty active</option>
+          <option value="expired">Warranty expired</option>
+          <option value="none">No warranty</option>
+        </select>
+      </div>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Part details</th>
+              <th>Supplier</th>
+              <th>Purchase date</th>
+              <th>Warranty ends</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="partsTable">
+            <tr>
+              <td colspan="6" class="empty-state">
+                No parts registered yet. Add your first part above.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p id="partsCount" class="table-footer">0 parts</p>
+    </section>
+
+    <section id="claims" class="panel">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">AFTER-SALES TRACKING</p>
+          <h2>Warranty claims</h2>
+          <p class="subtitle">Follow up on faulty parts and supplier decisions.</p>
+        </div>
+      </div>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Claim reference</th>
+              <th>Part</th>
+              <th>Problem</th>
+              <th>Date</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="claimsTable">
+            <tr>
+              <td colspan="6" class="empty-state">No warranty claims recorded.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <footer>
+      <p><strong>PartProof</strong> — Better records. Clearer warranties.</p>
+      <p>Prototype version · Records are stored in this browser.</p>
+    </footer>
+  </main>
+
+  <dialog id="claimDialog">
+    <form id="claimForm">
+      <div class="dialog-heading">
+        <div>
+          <p class="eyebrow">SUPPLIER FOLLOW-UP</p>
+          <h2>Record a warranty claim</h2>
+          <p id="claimPartName" class="subtitle"></p>
+        </div>
+        <button type="button" id="closeClaim" class="close-btn"
+          aria-label="Close dialog">✕</button>
+      </div>
+
+      <input id="claimPartId" type="hidden">
+
+      <label>
+        Describe the fault *
+        <textarea id="claimDescription" required maxlength="1000"
+          rows="4" placeholder="Describe the problem and any tests performed..."></textarea>
+      </label>
+
+      <label>
+        Claim status
+        <select id="claimStatus">
+          <option>Open</option>
+          <option>In review</option>
+          <option>Approved</option>
+          <option>Rejected</option>
+          <option>Resolved</option>
+        </select>
+      </label>
+
+      <div class="form-actions">
+        <button type="submit" class="primary-btn">Save claim</button>
+        <button type="button" id="cancelClaim" class="secondary-btn">Cancel</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="qrDialog">
+    <div class="dialog-heading">
+      <div>
+        <p class="eyebrow">PART IDENTIFICATION</p>
+        <h2 id="qrPartName">Part QR code</h2>
+      </div>
+      <button type="button" id="closeQr" class="close-btn"
+        aria-label="Close dialog">✕</button>
+    </div>
+    <div id="qrCode" class="qr-code"></div>
+    <p id="qrReference" class="qr-reference"></p>
+    <p class="subtitle">This code identifies the local record. It is not a public verification link.</p>
+    <button type="button" id="printQr" class="primary-btn">Print QR code</button>
+  </dialog>
+</body>
+</html>
